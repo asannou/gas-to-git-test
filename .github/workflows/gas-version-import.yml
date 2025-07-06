@@ -1,0 +1,55 @@
+name: Import Google Apps Script Versions to Git
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate_versions:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 'lts/*'
+
+    - name: Install clasp and jq
+      run: |
+        npm install -g @google/clasp
+        sudo apt-get update
+        sudo apt-get install -y jq
+
+    - name: Configure clasp credentials
+      run: |
+        mkdir -p ~/.clasp
+        cat <<EOF > ~/.clasprc.json
+        {
+          "tokens": {
+            "default": {
+              "client_id": "${{ secrets.CLASP_CLIENT_ID }}",
+              "client_secret": "${{ secrets.CLASP_CLIENT_SECRET }}",
+              "type": "authorized_user",
+              "refresh_token": "${{ secrets.CLASP_REFRESH_TOKEN }}",
+              "access_token": "dummy",
+              "token_type": "Bearer",
+              "expiry_date": 1,
+              "id_token": "dummy"
+            }
+          }
+        }
+        EOF
+      env:
+        CLASP_REFRESH_TOKEN: ${{ secrets.CLASP_REFRESH_TOKEN }}
+        CLASP_CLIENT_ID: ${{ secrets.CLASP_CLIENT_ID }}
+        CLASP_CLIENT_SECRET: ${{ secrets.CLASP_CLIENT_SECRET }}
+
+    - name: Generate and push GAS versions
+      run: |
+        bash .github/scripts/import_gas_versions.sh "${{ secrets.CLASP_SCRIPT_ID }}"
+      env:
+        CLASP_SCRIPT_ID: ${{ secrets.CLASP_SCRIPT_ID }}
