@@ -13,3 +13,6 @@ jobs:
         uses: asannou/gas-version-importer-action@master
         with:
           script_id: ${{ secrets.CLASP_SCRIPT_ID }}
+          CLASP_REFRESH_TOKEN: ${{ secrets.CLASP_REFRESH_TOKEN }}
+          CLASP_CLIENT_ID: ${{ secrets.CLASP_CLIENT_ID }}
+          CLASP_CLIENT_SECRET: ${{ secrets.CLASP_CLIENT_SECRET }}
