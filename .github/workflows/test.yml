@@ -6,6 +6,8 @@ on:
 jobs:
   test_import:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Import GAS Versions
         uses: asannou/gas-version-importer-action@master
