@@ -1,0 +1,17 @@
+name: Test GAS Version Importer
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test_import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Import GAS Versions
+        uses: asannou/gas-version-importer-action@master
+        with:
+          script_id: ${{ secrets.CLASP_SCRIPT_ID }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          CLASP_REFRESH_TOKEN: ${{ secrets.CLASP_REFRESH_TOKEN }}
+          CLASP_CLIENT_ID: ${{ secrets.CLASP_CLIENT_ID }}
+          CLASP_CLIENT_SECRET: ${{ secrets.CLASP_CLIENT_SECRET }}
